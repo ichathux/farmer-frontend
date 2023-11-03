@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FileUploaderComponent {
   private selectedFile: File | null = null;
-
+  errorList = [];
   constructor(private http: HttpClient) {}
 
   onFileSelected(event: any) {
@@ -27,7 +27,8 @@ export class FileUploaderComponent {
             console.log('File uploaded successfully', response);
           },
           (error) => {
-            console.error('Error uploading file', error);
+            console.error( error.error);
+            this.errorList = error.error;
           }
         );
     }
