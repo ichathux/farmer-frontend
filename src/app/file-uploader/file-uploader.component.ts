@@ -33,7 +33,7 @@ export class FileUploaderComponent implements OnInit {
 
   submitForm() {
     const formData = new FormData();
-    if (this.selectedFile) {
+    if (this.selectedFile && this.project != '' && this.audit != '') {
 
       console.log(this.projectName)
       console.log(this.projectIdSelected)
