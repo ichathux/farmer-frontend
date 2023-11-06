@@ -1,14 +1,55 @@
-<h1>Excel Upload</h1>
-<div>
-    <input type="file" (change)="onFileSelected($event)" />
-    <button (click)="onUpload()">Upload</button>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <div class="card text-center">
+        <div class="card-header">Excel Uploader</div>
+
+        <div class="card-body">
+          <hr>
+          <form (ngSubmit)="submitForm()" #fileUploadForm="ngForm" class="row g-3">
+            <div class="row">
+              <div class="col-4">
+                <input class="form-control" type="text" id="project" name="project" list="projectsList"
+                       [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onOptionSelected()"
+                       placeholder="project" autocomplete="off">
+                <datalist id="projectsList">
+                  <option *ngFor="let p of projects" [value]="p.proName">{{p.proName}}</option>
+                </datalist>
+              </div>
+              <div class="col-4">
+                <input class="form-control" type="text" id="audit" name="audit" [(ngModel)]="audit" autocomplete="off" placeholder="audit">
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">Upload Excel file</label>
+                <input class="form-control" type="file" id="formFile" (change)="onFileSelected($event)">
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card"*ngIf="errorList.length > 0">
+        <h5 class="card-header">Error List</h5>
+        <div class="card-body">
+          <!--          <h5 class="card-title">Special title treatment</h5>-->
+          <table>
+            <tr *ngFor="let error of errorList">
+              <td style="color: red;">{{error}}</td>
+            </tr>
+          </table>
+          <a (click)="clearErrors()" class="btn btn-primary">Clear</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
 
-<div>
-  <h1>Error List</h1>
-  <table>
-    <tr *ngFor="let error of errorList">
-      <td style="color: red;">{{error}}</td>
-    </tr>
-  </table>
-</div>
+
+
+
+
