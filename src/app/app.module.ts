@@ -7,8 +7,9 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SampleFileUploaderComponent } from './sample-file-uploader/sample-file-uploader.component';
 import { FormsModule } from '@angular/forms';
+import { FileComparisonComponent } from './file-comparison/file-comparison.component';
 @NgModule({
-  declarations: [AppComponent, FileUploaderComponent, SampleFileUploaderComponent],
+  declarations: [AppComponent, FileUploaderComponent, SampleFileUploaderComponent, FileComparisonComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule,FormsModule],
   providers: [],
   bootstrap: [AppComponent],
