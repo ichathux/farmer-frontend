@@ -2,22 +2,25 @@
   <div class="row">
     <div class="col-8">
       <div class="card text-center">
-        <div class="card-header">Excel Uploader</div>
-
+        <div class="card-header">Excel Uploaders</div>
         <div class="card-body">
           <hr>
           <form (ngSubmit)="submitForm()" #fileUploadForm="ngForm" class="row g-3">
             <div class="row">
               <div class="col-4">
+                <label for="formFile" class="form-label">Project Name</label>
                 <input class="form-control" type="text" id="project" name="project" list="projectsList"
-                       [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onOptionSelected()"
-                       placeholder="project" autocomplete="off">
+                       [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onProjectOptionSelected()"
+                        autocomplete="off">
                 <datalist id="projectsList">
-                  <option *ngFor="let p of projects" [value]="p.proName">{{p.proName}}</option>
+                  <option *ngFor="let p of projects"  [value]="p.proName">{{p.proName}}</option>
                 </datalist>
               </div>
               <div class="col-4">
-                <input class="form-control" type="text" id="audit" name="audit" [(ngModel)]="audit" autocomplete="off" placeholder="audit">
+                <label for="formFile" class="form-label">Select Audit</label>
+                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit">
+                  <option *ngFor="let a of auditPlans" [value]="a.planId">{{a.auditNo}}</option>
+                </select>
               </div>
               <div class="mb-3">
                 <label for="formFile" class="form-label">Upload Excel file</label>

@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import * as path from "path";
+
 import {FileUploaderComponent} from "./file-uploader/file-uploader.component";
 import {FileComparisonComponent} from "./file-comparison/file-comparison.component";
+import {HomeComponent} from "./home/home.component";
+import {FileUploadComponent} from "./file-upload/file-upload.component";
 
 const routes: Routes = [
-  {path: '/file-upload', component: FileUploaderComponent},
-  {path: '/farmer-comparison', component: FileComparisonComponent},
+  {path: '', component: HomeComponent},
+  {path: 'file-upload', component: FileUploadComponent},
+  {path: 'farmer-comparison', component: FileComparisonComponent},
 ];
 
 @NgModule({

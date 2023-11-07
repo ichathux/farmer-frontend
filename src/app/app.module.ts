@@ -10,8 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { FileComparisonComponent } from './file-comparison/file-comparison.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+
 @NgModule({
-  declarations: [AppComponent, FileUploaderComponent, SampleFileUploaderComponent, FileComparisonComponent, FileUploadComponent, HomeComponent],
+  declarations: [AppComponent, FileUploaderComponent,HeaderComponent, SampleFileUploaderComponent, FileComparisonComponent, FileUploadComponent, HomeComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule,FormsModule],
   providers: [],
   bootstrap: [AppComponent],

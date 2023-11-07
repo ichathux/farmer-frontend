@@ -1,1 +1,59 @@
-<p>file-comparison works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-8">
+      <div class="card text-center">
+        <div class="card-header">Excel Uploaders</div>
+        <div class="card-body">
+          <hr>
+          <form (ngSubmit)="submitForm()" #fileUploadForm="ngForm" class="row g-3">
+            <div class="row">
+              <div class="col-4">
+                <label for="formFile" class="form-label">Project Name</label>
+                <input class="form-control" type="text" id="project" name="project" list="projectsList"
+                       [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onProjectOptionSelected()"
+                       autocomplete="off">
+                <datalist id="projectsList">
+                  <option *ngFor="let p of projects"  [value]="p.proName">{{p.proName}}</option>
+                </datalist>
+              </div>
+              <div class="col-4">
+                <label for="formFile" class="form-label">Select Audit</label>
+                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit">
+                  <option *ngFor="let a of auditPlans" [value]="a.planId">{{a.auditNo}}</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary">View</button>
+            </div>
+          </form>
+          <div>
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th scope="col">Farmer code (EU/JAS)</th>
+                <th scope="col">chngCropdata</th>
+                <th scope="col">chngFarmdata</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let fl of farmlists">
+                <th scope="row">{{fl.farCodeEUJAS}}</th>
+                <td>{{fl.chngCropdata}}</td>
+                <td>{{fl.chngFarmdata}}</td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
