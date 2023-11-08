@@ -99,7 +99,7 @@ export class FileUploaderComponent implements OnInit {
   }
 
   getAudits(proid: number) {
-    console.log("get audits plans")
+    console.log("get audits plans for : ",this.proId)
     this.http.get(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits

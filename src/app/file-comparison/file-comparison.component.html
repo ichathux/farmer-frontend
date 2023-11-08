@@ -1,13 +1,13 @@
 <div class="container">
   <div class="row">
-    <div class="col-8">
+    <div class="col-12">
       <div class="card text-center">
-        <div class="card-header">Excel Uploaders</div>
+        <div class="card-header">Check Audit Changes</div>
         <div class="card-body">
           <hr>
           <form (ngSubmit)="submitForm()" #fileUploadForm="ngForm" class="row g-3">
             <div class="row">
-              <div class="col-4">
+              <div class="col-6">
                 <label for="formFile" class="form-label">Project Name</label>
                 <input class="form-control" type="text" id="project" name="project" list="projectsList"
                        [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onProjectOptionSelected()"
@@ -16,7 +16,7 @@
                   <option *ngFor="let p of projects"  [value]="p.proName">{{p.proName}}</option>
                 </datalist>
               </div>
-              <div class="col-4">
+              <div class="col-6">
                 <label for="formFile" class="form-label">Select Audit</label>
                 <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit">
                   <option *ngFor="let a of auditPlans" [value]="a.planId">{{a.auditNo}}</option>
@@ -27,20 +27,32 @@
               <button type="submit" class="btn btn-primary">View</button>
             </div>
           </form>
+
+        </div>
+      </div>
+      <div class="card" *ngIf="farmlists.length > 0">
+        <h5 class="card-header">Changes List</h5>
+        <div class="card-body">
           <div>
             <table class="table table-striped">
               <thead>
               <tr>
+                <th scope="col">cuid</th>
                 <th scope="col">Farmer code (EU/JAS)</th>
+                <th scope="col">Farmer Name</th>
                 <th scope="col">chngCropdata</th>
                 <th scope="col">chngFarmdata</th>
+                <th scope="col">Is new Farmer</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let fl of farmlists">
+              <tr *ngFor="let fl of farmlists" [ngClass]="{'new-former-row': fl.isNew}">
+                <th scope="row">{{fl.cufarmerID}}</th>
                 <th scope="row">{{fl.farCodeEUJAS}}</th>
+                <th scope="row">{{fl.farmName}}</th>
                 <td>{{fl.chngCropdata}}</td>
                 <td>{{fl.chngFarmdata}}</td>
+                <td>{{fl.isNew}}</td>
               </tr>
 
               </tbody>

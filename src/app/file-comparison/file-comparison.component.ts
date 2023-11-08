@@ -22,7 +22,6 @@ export class FileComparisonComponent implements OnInit {
   }
   farmlists: any = [];
   submitForm() {
-    const formData = new FormData();
     if (this.project != '' && this.audit != '') {
       console.log('audit id',this.audit)
       console.log('project id',this.proId)
@@ -30,7 +29,6 @@ export class FileComparisonComponent implements OnInit {
         .get(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
-
             this.farmlists = response;
             console.log('response', this.farmlists[0].chngCropdata);
             console.log('response', this.farmlists[0].chngFarmdata);
@@ -62,12 +60,12 @@ export class FileComparisonComponent implements OnInit {
       this.projectIdSelected = project.proCode;
       this.projectName = project.proName;
       this.proId = project.id;
-      // console.log(this.projectIdSelected)
+      console.log(this.proId)
       this.getAudits(this.proId);
     }
   }
   getAudits(proid: number) {
-    console.log("get audits plans")
+    console.log("get audits plans for : "+proid)
     this.http.get(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
