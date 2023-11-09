@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Project} from "../model/project.model";
 import {HttpClient} from "@angular/common/http";
+import {FarmerChanges} from "../model/farmer-changes.model";
 
 @Component({
   selector: 'app-file-comparison',
@@ -14,7 +15,8 @@ export class FileComparisonComponent implements OnInit {
   projects: Project[] = [];
   private proId: any;
   auditPlans: any = [];
-
+  newFarmersList : any = [];
+  oldFarmersList : FarmerChanges[] = [];
 
   constructor(private http : HttpClient) { }
 
@@ -22,17 +24,34 @@ export class FileComparisonComponent implements OnInit {
   }
   farmlists: any = [];
   submitForm() {
+    this.newFarmersList = [];
+    this.oldFarmersList = [];
     if (this.project != '' && this.audit != '') {
       console.log('audit id',this.audit)
       console.log('project id',this.proId)
       this.http
-        .get(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
+        .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
             this.farmlists = response;
-            console.log('response', this.farmlists[0].chngCropdata);
-            console.log('response', this.farmlists[0].chngFarmdata);
-            console.log(this.farmlists);
+            response.forEach((r : any) =>{
+              if (r.isNew == 1){
+                this.newFarmersList.push(r);
+              }else{
+                // const chngCropdata = JSON.parse( r.chngCropdata);
+                // const chngFarmdata = JSON.parse( r.chngFarmdata);
+                let obj = {
+                  unitNoEUJAS : r.unitNoEUJAS,
+                  farCodeEUJAS : r.farCodeEUJAS,
+                  farmerName : r.farmerName,
+                  chngCropdata : r.chngCropdata,
+                  chngFarmdata : r.chngFarmdata
+                }
+                this.oldFarmersList.push(obj);
+              }
+            })
+            console.log(this.newFarmersList);
+            console.log(this.oldFarmersList);
             // @ts-ignore
           },
           (error) => {

@@ -13,7 +13,7 @@
                        [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onProjectOptionSelected()"
                        autocomplete="off">
                 <datalist id="projectsList">
-                  <option *ngFor="let p of projects"  [value]="p.proName">{{p.proName}}</option>
+                  <option *ngFor="let p of projects" [value]="p.proName">{{p.proName}}</option>
                 </datalist>
               </div>
               <div class="col-6">
@@ -30,38 +30,63 @@
 
         </div>
       </div>
-      <div class="card" *ngIf="farmlists.length > 0">
-        <h5 class="card-header">Changes List</h5>
-        <div class="card-body">
-          <div>
-            <table class="table table-striped">
-              <thead>
-              <tr>
-                <th scope="col">cuid</th>
-                <th scope="col">Farmer code (EU/JAS)</th>
-                <th scope="col">Farmer Name</th>
-                <th scope="col">chngCropdata</th>
-                <th scope="col">chngFarmdata</th>
-                <th scope="col">Is new Farmer</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let fl of farmlists" [ngClass]="{'new-former-row': fl.isNew}">
-                <th scope="row">{{fl.cufarmerID}}</th>
-                <th scope="row">{{fl.farCodeEUJAS}}</th>
-                <th scope="row">{{fl.farmName}}</th>
-                <td>{{fl.chngCropdata}}</td>
-                <td>{{fl.chngFarmdata}}</td>
-                <td>{{fl.isNew}}</td>
-                <td *ngIf="fl.isNew == 1"></td>
-              </tr>
+      <div *ngIf="farmlists.length > 0">
+        <div class="card" *ngIf="farmlists.length > 0">
+          <h5 class="card-header">New</h5>
+          <div class="card-body">
+            <div>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">cuid</th>
+                  <th scope="col">Farmer code (EU/JAS)</th>
+                  <th scope="col">Farmer Name</th>
+                  <th scope="col">Total Area</th>
+                  <th scope="col">chngFarmdata</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let fl of newFarmersList; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{fl.cufarmerID}}</td>
+                  <td>{{fl.farCodeEUJAS}}</td>
+                  <td>{{fl.farmName}}</td>
+                  <td>{{fl.totalArea}}</td>
+                  <td>{{fl.Crops}}</td>
+                </tr>
 
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h5 class="card-header">Changes List</h5>
+          <div class="card-body">
+            <div *ngFor="let fl of oldFarmersList; let i = index">
+              <p>{{i}} - {{fl.unitNoEUJAS}} | {{fl.farCodeEUJAS}} | {{fl.farmerName}}</p>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">chngCropdata</th>
+                  <th scope="col">chngFarmdata</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>{{fl.chngCropdata}}</td>
+                  <td>{{fl.chngFarmdata}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
 
   </div>
 </div>
