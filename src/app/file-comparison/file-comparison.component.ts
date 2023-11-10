@@ -17,12 +17,14 @@ export class FileComparisonComponent implements OnInit {
   auditPlans: any = [];
   newFarmersList : any = [];
   oldFarmersList : FarmerChanges[] = [];
+  farmerlist_deleted : any = [];
 
   constructor(private http : HttpClient) { }
 
   ngOnInit(): void {
   }
   farmlists: any = [];
+
   submitForm() {
     this.newFarmersList = [];
     this.oldFarmersList = [];
@@ -50,6 +52,7 @@ export class FileComparisonComponent implements OnInit {
                 this.oldFarmersList.push(obj);
               }
             })
+            this.getDeletedFarmerList()
             console.log(this.newFarmersList);
             console.log(this.oldFarmersList);
             // @ts-ignore
@@ -61,7 +64,14 @@ export class FileComparisonComponent implements OnInit {
         );
     }
   }
-
+  getDeletedFarmerList(){
+    this.http.get<any>(`http://localhost:8080/api/deleted_farmers/v1/getDeletedList?proId=${this.proId}&auditId=${this.audit}`)
+      .subscribe(response => {
+        console.log(response)
+        this.farmerlist_deleted = response;
+        // console.log(this.projects)
+      });
+  }
   searchProjects() {
     this.http.get<Project[]>(`http://localhost:8080/api/project/v1/search?name=${this.project}`)
       .subscribe(projects => {

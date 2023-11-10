@@ -57,6 +57,7 @@ export class FileUploaderComponent implements OnInit {
           },
           (error) => {
             let err = "";
+            console.log(error.error)
             error.error.forEach((e: any) => {
               err = e.location + " : " + e.error + " : " + ((e.errorValue == null) ? " " : "Error : " + e.errorValue)
                 + ((e.correctValue == null) ? " " : " Must be correct as : " + e.correctValue);

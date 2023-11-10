@@ -61,6 +61,36 @@
             </div>
           </div>
         </div>
+        <div class="card" *ngIf="farmerlist_deleted.length > 0">
+          <h5 class="card-header">Deleted</h5>
+          <div class="card-body">
+            <div>
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">cuid</th>
+                  <th scope="col">Farmer code (EU/JAS)</th>
+                  <th scope="col">Farmer Name</th>
+                  <th scope="col">Total Area</th>
+                  <th scope="col">chngFarmdata</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let fl of farmerlist_deleted; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{fl.cufarmerID}}</td>
+                  <td>{{fl.farCodeEUJAS}}</td>
+                  <td>{{fl.farmName}}</td>
+                  <td>{{fl.totalArea}}</td>
+                  <td>{{fl.Crops}}</td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
         <div class="card">
           <h5 class="card-header">Changes List</h5>
