@@ -25,6 +25,7 @@ export class FileUploaderComponent implements OnInit {
   private webSocket: WebSocket;
   stock: any = {};
   progressMessage: string = "";
+
   constructor(private http: HttpClient) {
 
     // this.webSocket = new WebSocket('ws://localhost:8080/stocks');
@@ -43,19 +44,19 @@ export class FileUploaderComponent implements OnInit {
     // };
     // this.webSocketService.receiveMessage().subscribe((response) => {
     //   console.log("message : ",response)
-        // if (response.destination === '/topic/upload-progress') {
-        //   // Handle the progress message
-        //   console.log("recioive")
-        //   // this.handleProgressMessage(message.payload);
-        // }
-      // if (response && response.hasOwnProperty('progress')) {
-      //   console.log(response.progress);
-      // } else if (response && response.hasOwnProperty('progress')) {
-      //   this.progress = response.progress;
-      //   console.log(response.progress);
-      // } else {
-      //   console.error('Invalid WebSocket response format:', response);
-      // }
+    // if (response.destination === '/topic/upload-progress') {
+    //   // Handle the progress message
+    //   console.log("recioive")
+    //   // this.handleProgressMessage(message.payload);
+    // }
+    // if (response && response.hasOwnProperty('progress')) {
+    //   console.log(response.progress);
+    // } else if (response && response.hasOwnProperty('progress')) {
+    //   this.progress = response.progress;
+    //   console.log(response.progress);
+    // } else {
+    //   console.error('Invalid WebSocket response format:', response);
+    // }
     // },
     //   error => {
     //   console.error("error occurred ",error)
@@ -69,6 +70,7 @@ export class FileUploaderComponent implements OnInit {
   ngOnInit(): void {
     // this.getAllProjects();
   }
+
   handleProgressMessage(payload: any): void {
     // Update your component's state or perform any actions based on the progress message
     this.progressMessage = `Progress: ${payload.bytesRead} / ${payload.contentLength}`;
@@ -117,16 +119,28 @@ export class FileUploaderComponent implements OnInit {
         //   }
         // );
         .subscribe((event: any) => {
-          if (event.type === 1) {
-            // This is an upload progress event
-            const percentDone = Math.round(100 * event.loaded / event.total);
-            this.progress = percentDone;
-          } else if (event.type === 4 && event.body) {
-            // This is the final response after the file has been uploaded
-            const response = event.body;
-            console.log('File upload complete:', response);
+            if (event.type === 1) {
+              // This is an upload progress event
+              const percentDone = Math.round(100 * event.loaded / event.total);
+              this.progress = percentDone;
+            } else if (event.type === 4 && event.body) {
+              // This is the final response after the file has been uploaded
+              const response = event.body;
+              console.log('File upload complete:', response);
+            }
+          }, (error) => {
+            let err = "";
+            console.log(error.error)
+            error.error.forEach((e: any) => {
+              err = e.location + " : " + e.error + " : " + ((e.errorValue == null) ? " " : "Error : " + e.errorValue)
+                + ((e.correctValue == null) ? " " : " Must be correct as : " + e.correctValue);
+              this.errorList.push(err);
+              // alert("error")
+              // @ts-ignore
+              this.form.resetForm()
+            })
           }
-        });
+        );
     }
   }
 
@@ -160,7 +174,7 @@ export class FileUploaderComponent implements OnInit {
   }
 
   getAudits(proid: number) {
-    console.log("get audits plans for : ",this.proId)
+    console.log("get audits plans for : ", this.proId)
     this.http.get(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits

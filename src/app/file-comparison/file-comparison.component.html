@@ -11,20 +11,21 @@
                 <label for="formFile" class="form-label">Project Name</label>
                 <input class="form-control" type="text" id="project" name="project" list="projectsList"
                        [(ngModel)]="project" (ngModelChange)="searchProjects()" (change)="onProjectOptionSelected()"
-                       autocomplete="off">
+                       autocomplete="off" required>
                 <datalist id="projectsList">
                   <option *ngFor="let p of projects" [value]="p.proName">{{p.proName}}</option>
                 </datalist>
               </div>
               <div class="col-6">
                 <label for="formFile" class="form-label">Select Audit</label>
-                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit">
+                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit" required>
                   <option *ngFor="let a of auditPlans" [value]="a.planId">{{a.auditNo}}</option>
                 </select>
               </div>
             </div>
             <div>
               <button type="submit" class="btn btn-primary">View</button>
+              <button *ngIf="!isCertified" type="button" (click)="certifyFarmerList()" class="btn btn-light">Certify</button>
             </div>
           </form>
 

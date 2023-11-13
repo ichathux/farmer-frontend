@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Project} from "../model/project.model";
 import {HttpClient} from "@angular/common/http";
 import {FarmerChanges} from "../model/farmer-changes.model";
+import {AuditModel} from "../model/audit.model";
 
 @Component({
   selector: 'app-file-comparison',
@@ -11,10 +12,10 @@ import {FarmerChanges} from "../model/farmer-changes.model";
 export class FileComparisonComponent implements OnInit {
 
   project: string = '';
-  audit: string = '';
+  audit: any ;
   projects: Project[] = [];
   private proId: any;
-  auditPlans: any = [];
+  auditPlans: AuditModel[] = [];
   newFarmersList : any = [];
   oldFarmersList : FarmerChanges[] = [];
   farmerlist_deleted : any = [];
@@ -95,14 +96,52 @@ export class FileComparisonComponent implements OnInit {
   }
   getAudits(proid: number) {
     console.log("get audits plans for : "+proid)
-    this.http.get(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
+    this.http.get<any>(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
-        // console.log(audits)
+        console.log(audits)
       });
   }
+
+  auditObject : AuditModel | undefined ;
+  isCertified : boolean = true;
   onAuditOptionSelected() {
+    // const pro = this.auditPlans.find(a => a.planId === this.audit)
+    let auditObject = this.auditPlans.find(a => a.planId == this.audit);
+    // @ts-ignore
+    this.isCertified = auditObject.certified;
     console.log("selected audit ", this.audit)
+    console.log("selected audit ", auditObject)
+  }
+
+  certifyFarmerList(){
+    if (this.project != '' && this.audit != ''){
+      console.log("certify project")
+      console.log("project-id : ",this.proId)
+      console.log("audit-d : ",this.audit)
+
+      const formData = new FormData();
+      formData.append('proID', this.proId);
+      formData.append('auditID', this.audit);
+
+
+      this.http.post(`http://localhost:8080/api/plan/v1/certify`, formData)
+        .subscribe(
+          (response) => {
+          // this.auditPlans = audits
+          // console.log(audits)
+            alert("done")
+        },
+          (error)=>{
+            alert("error")
+            console.error(error)
+          },
+          () => {
+            alert("done")
+          });
+    }
+
+
   }
 
 }
