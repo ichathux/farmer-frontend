@@ -22,7 +22,7 @@ export class FileUploaderComponent implements OnInit {
   auditPlans: any = [];
 
   progress: number = 0;
-  private webSocket: WebSocket;
+  // private webSocket: WebSocket;
   stock: any = {};
   progressMessage: string = "";
 
@@ -30,13 +30,13 @@ export class FileUploaderComponent implements OnInit {
 
     // this.webSocket = new WebSocket('ws://localhost:8080/stocks');
     // this.webSocket = new WebSocket('ws://localhost:8080/ws');
-    this.webSocket = new WebSocket('ws://localhost:8080/gs-guide-websocket');
-
-    this.webSocket.onmessage = (event) => {
-      console.log(event)
-      this.stock = JSON.parse(event.data)
-      console.log(this.stock)
-    };
+    // this.webSocket = new WebSocket('ws://localhost:8080/gs-guide-websocket');
+    //
+    // this.webSocket.onmessage = (event) => {
+    //   console.log(event)
+    //   this.stock = JSON.parse(event.data)
+    //   console.log(this.stock)
+    // };
 
     // this.webSocket.onmessage = (event) => {
     //   // this.stock = JSON.parse(event.data)
@@ -96,7 +96,7 @@ export class FileUploaderComponent implements OnInit {
       formData.append('proId', this.proId);
       this.errorList = [];
       this.http
-        .post('http://localhost:8080/api/upload', formData, {
+        .post('http://localhost:8080/api/file/v1/upload', formData, {
           reportProgress: true, // enable progress tracking
           observe: 'events'
         })
@@ -120,6 +120,7 @@ export class FileUploaderComponent implements OnInit {
         // );
         .subscribe((event: any) => {
             if (event.type === 1) {
+              console.log(event)
               // This is an upload progress event
               const percentDone = Math.round(100 * event.loaded / event.total);
               this.progress = percentDone;
