@@ -16,8 +16,6 @@ export class FileComparisonComponent {
   projects: Project[] = [];
   private proId: any;
   auditPlans: AuditModel[] = [];
-  newFarmersList: any = [];
-  oldFarmersList: FarmerChanges[] = [];
   farmerlist_deleted: any = [];
   auditObject: AuditModel | undefined;
   isCertified: boolean = true;
@@ -26,12 +24,14 @@ export class FileComparisonComponent {
 
   constructor(private http: HttpClient) {
   }
-
   farmlists: any = [];
+  deletedFarmerList : any[] = [];
+  newFarmerList : any[] = [];
+  oldFarmerList: any[] = [];
 
   submitForm() {
-    this.newFarmersList = [];
-    this.oldFarmersList = [];
+    // this.newFarmersList = [];
+    // this.oldFarmersList = [];
     if (this.project != '' && this.audit != '') {
       console.log('audit id', this.audit)
       console.log('project id', this.proId)
@@ -39,13 +39,10 @@ export class FileComparisonComponent {
         .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
-            this.farmlists = response;
-            response.forEach((r: any) => {
-              if (r.isNew == 1) {
-                this.newFarmersList.push(r);
-              } else {
-                // const chngCropdata = JSON.parse( r.chngCropdata);
-                // const chngFarmdata = JSON.parse( r.chngFarmdata);
+            this.farmlists = response
+            this.newFarmerList = response.newFarmerList;
+            this.deletedFarmerList = response.deletedFarmerList;
+              response.existingFarmerList.forEach((r: any) => {
                 if (r.isChange == 1){
                   let obj = {
                     unitNoEUJAS: r.unitNoEUJAS,
@@ -53,17 +50,11 @@ export class FileComparisonComponent {
                     farmerName: r.farmerName,
                     chngCropdata: JSON.parse(r.chngCropdata),
                     chngFarmdata: JSON.parse(r.chngFarmdata)
-                  }
-                  this.oldFarmersList.push(obj);
                 }
-
+                  this.oldFarmerList.push(obj);
               }
-            })
+            });
 
-            this.getDeletedFarmerList()
-            console.log(this.newFarmersList);
-            console.log(this.oldFarmersList);
-            // @ts-ignore
           },
           (error) => {
             let err = "";
@@ -71,14 +62,6 @@ export class FileComparisonComponent {
           }
         );
     }
-  }
-
-  getDeletedFarmerList() {
-    this.http.get<any>(`http://localhost:8080/api/deleted_farmers/v1/getDeletedList?proId=${this.proId}&auditId=${this.audit}`)
-      .subscribe(response => {
-        console.log(response)
-        this.farmerlist_deleted = response;
-      });
   }
 
   searchProjects() {
