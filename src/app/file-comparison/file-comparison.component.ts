@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Project} from "../model/project.model";
 import {HttpClient} from "@angular/common/http";
 import {FarmerChanges} from "../model/farmer-changes.model";
@@ -9,50 +9,57 @@ import {AuditModel} from "../model/audit.model";
   templateUrl: './file-comparison.component.html',
   styleUrls: ['./file-comparison.component.css']
 })
-export class FileComparisonComponent implements OnInit {
+export class FileComparisonComponent {
 
   project: string = '';
-  audit: any ;
+  audit: any;
   projects: Project[] = [];
   private proId: any;
   auditPlans: AuditModel[] = [];
-  newFarmersList : any = [];
-  oldFarmersList : FarmerChanges[] = [];
-  farmerlist_deleted : any = [];
+  newFarmersList: any = [];
+  oldFarmersList: FarmerChanges[] = [];
+  farmerlist_deleted: any = [];
+  auditObject: AuditModel | undefined;
+  isCertified: boolean = true;
+  projectIdSelected: string = "";
+  projectName: string = "";
 
-  constructor(private http : HttpClient) { }
-
-  ngOnInit(): void {
+  constructor(private http: HttpClient) {
   }
+
   farmlists: any = [];
 
   submitForm() {
     this.newFarmersList = [];
     this.oldFarmersList = [];
     if (this.project != '' && this.audit != '') {
-      console.log('audit id',this.audit)
-      console.log('project id',this.proId)
+      console.log('audit id', this.audit)
+      console.log('project id', this.proId)
       this.http
         .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
             this.farmlists = response;
-            response.forEach((r : any) =>{
-              if (r.isNew == 1){
+            response.forEach((r: any) => {
+              if (r.isNew == 1) {
                 this.newFarmersList.push(r);
-              }else{
+              } else {
                 // const chngCropdata = JSON.parse( r.chngCropdata);
                 // const chngFarmdata = JSON.parse( r.chngFarmdata);
-                let obj = {
-                  unitNoEUJAS : r.unitNoEUJAS,
-                  farCodeEUJAS : r.farCodeEUJAS,
-                  farmerName : r.farmerName,
-                  chngCropdata : r.chngCropdata,
-                  chngFarmdata : r.chngFarmdata
+                if (r.isChange == 1){
+                  let obj = {
+                    unitNoEUJAS: r.unitNoEUJAS,
+                    farCodeEUJAS: r.farCodeEUJAS,
+                    farmerName: r.farmerName,
+                    chngCropdata: JSON.parse(r.chngCropdata),
+                    chngFarmdata: JSON.parse(r.chngFarmdata)
+                  }
+                  this.oldFarmersList.push(obj);
                 }
-                this.oldFarmersList.push(obj);
+
               }
             })
+
             this.getDeletedFarmerList()
             console.log(this.newFarmersList);
             console.log(this.oldFarmersList);
@@ -65,24 +72,21 @@ export class FileComparisonComponent implements OnInit {
         );
     }
   }
-  getDeletedFarmerList(){
+
+  getDeletedFarmerList() {
     this.http.get<any>(`http://localhost:8080/api/deleted_farmers/v1/getDeletedList?proId=${this.proId}&auditId=${this.audit}`)
       .subscribe(response => {
         console.log(response)
         this.farmerlist_deleted = response;
-        // console.log(this.projects)
       });
   }
+
   searchProjects() {
     this.http.get<Project[]>(`http://localhost:8080/api/project/v1/search?name=${this.project}`)
       .subscribe(projects => {
         this.projects = projects
-        // console.log(this.projects)
       });
   }
-
-  projectIdSelected: string = "";
-  projectName: string = "";
 
   onProjectOptionSelected() {
     const project = this.projects.find(p => p.proName === this.project);
@@ -94,8 +98,9 @@ export class FileComparisonComponent implements OnInit {
       this.getAudits(this.proId);
     }
   }
+
   getAudits(proid: number) {
-    console.log("get audits plans for : "+proid)
+    console.log("get audits plans for : " + proid)
     this.http.get<any>(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
@@ -103,8 +108,6 @@ export class FileComparisonComponent implements OnInit {
       });
   }
 
-  auditObject : AuditModel | undefined ;
-  isCertified : boolean = true;
   onAuditOptionSelected() {
     // const pro = this.auditPlans.find(a => a.planId === this.audit)
     let auditObject = this.auditPlans.find(a => a.planId == this.audit);
@@ -114,25 +117,23 @@ export class FileComparisonComponent implements OnInit {
     console.log("selected audit ", auditObject)
   }
 
-  certifyFarmerList(){
-    if (this.project != '' && this.audit != ''){
+  certifyFarmerList() {
+    if (this.project != '' && this.audit != '') {
       console.log("certify project")
-      console.log("project-id : ",this.proId)
-      console.log("audit-d : ",this.audit)
+      console.log("project-id : ", this.proId)
+      console.log("audit-d : ", this.audit)
 
       const formData = new FormData();
       formData.append('proID', this.proId);
       formData.append('auditID', this.audit);
 
-
-      this.http.post(`http://localhost:8080/api/plan/v1/certify`, formData)
+      this.http
+        .post(`http://localhost:8080/api/plan/v1/certify`, formData)
         .subscribe(
           (response) => {
-          // this.auditPlans = audits
-          // console.log(audits)
             alert("done")
-        },
-          (error)=>{
+          },
+          (error) => {
             alert("error")
             console.error(error)
           },
@@ -140,8 +141,5 @@ export class FileComparisonComponent implements OnInit {
             alert("done")
           });
     }
-
-
   }
-
 }

@@ -18,14 +18,16 @@
               </div>
               <div class="col-6">
                 <label for="formFile" class="form-label">Select Audit</label>
-                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit" required>
+                <select class="form-select" [(ngModel)]="audit" (change)="onAuditOptionSelected()" name="audit"
+                        required>
                   <option *ngFor="let a of auditPlans" [value]="a.planId">{{a.auditNo}}</option>
                 </select>
               </div>
             </div>
             <div>
               <button type="submit" class="btn btn-primary">View</button>
-              <button *ngIf="!isCertified" type="button" (click)="certifyFarmerList()" class="btn btn-light">Certify</button>
+              <button *ngIf="!isCertified" type="button" (click)="certifyFarmerList()" class="btn btn-light">Certify
+              </button>
             </div>
           </form>
 
@@ -96,23 +98,113 @@
         <div class="card">
           <h5 class="card-header">Changes List</h5>
           <div class="card-body">
-            <div *ngFor="let fl of oldFarmersList; let i = index">
-              <p>{{i}} - {{fl.unitNoEUJAS}} | {{fl.farCodeEUJAS}} | {{fl.farmerName}}</p>
-              <table class="table table-striped">
-                <thead>
-                <tr>
-                  <th scope="col">chngCropdata</th>
-                  <th scope="col">chngFarmdata</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>{{fl.chngCropdata}}</td>
-                  <td>{{fl.chngFarmdata}}</td>
-                </tr>
-                </tbody>
-              </table>
+            <div class="row" *ngFor="let fl of oldFarmersList; let i = index">
+              <div class="card border-light mb-3" style="max-width: 100%;" *ngIf="fl.chngFarmdata.length > 0 || fl.chngCropdata.length > 0">
+                <div class="card-header">{{i+1}} - {{fl.unitNoEUJAS}} | {{fl.farCodeEUJAS}} | {{fl.farmerName}}</div>
+
+                <div class="card-body">
+                  <div class="card-group">
+                    <div class="card border-light mb-3" style="max-width: 50%;" *ngIf="fl.chngCropdata.length > 0">
+                      <div class="card-header">Crop Data {{fl.chngCropdata.length}}</div>
+                      <div class="card-body">
+<!--                        <h5 class="card-title">Light card title</h5>-->
+                        <table class="table table-sm" >
+                          <thead>
+                          <tr>
+                            <th scope="col">Field Name</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Current</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let cd of fl.chngCropdata">
+                            <td>{{cd.change}} </td>
+                            <td>{{cd.last}}</td>
+                            <td>{{cd.current}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="card border-light mb-3" style="max-width: 50%;" *ngIf="fl.chngFarmdata.length > 0">
+                      <div class="card-header">Farm data</div>
+                      <div class="card-body">
+<!--                        <h5 class="card-title">Light card title</h5>-->
+                        <table class="table table-sm" >
+                          <thead>
+                          <tr>
+                            <th scope="col">Field Name</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Current</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let fd of fl.chngFarmdata">
+                            <td>{{fd.change}}</td>
+                            <td>{{fd.last}}</td>
+                            <td>{{fd.current}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
+<!--            <div *ngFor="let fl of oldFarmersList; let i = index">-->
+<!--              <table class="table table-striped" *ngIf="fl.chngFarmdata.length > 0 || fl.chngCropdata.length > 0">-->
+<!--                <p>{{i}} - {{fl.unitNoEUJAS}} | {{fl.farCodeEUJAS}} | {{fl.farmerName}}</p>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                  <th scope="col"></th>-->
+<!--                  <th scope="col"></th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr>-->
+<!--                  <td>-->
+<!--                    <table class="table table-sm" *ngIf="fl.chngCropdata.length > 0">-->
+<!--                      <thead>-->
+<!--                      <tr>-->
+<!--                        <th scope="col">Field Name</th>-->
+<!--                        <th scope="col">Last</th>-->
+<!--                        <th scope="col">Current</th>-->
+<!--                      </tr>-->
+<!--                      </thead>-->
+<!--                      <tbody>-->
+<!--                      <tr *ngFor="let cd of fl.chngCropdata">-->
+<!--                        <td>{{cd.change}}</td>-->
+<!--                        <td>{{cd.last}}</td>-->
+<!--                        <td>{{cd.curent}}</td>-->
+<!--                      </tr>-->
+<!--                      </tbody>-->
+<!--                    </table>-->
+<!--                  </td>-->
+<!--                  <td>-->
+<!--                    <table class="table table-sm" *ngIf="fl.chngFarmdata.length > 0">-->
+<!--                      <thead>-->
+<!--                      <tr>-->
+<!--                        <th scope="col">Field Name</th>-->
+<!--                        <th scope="col">Last</th>-->
+<!--                        <th scope="col">Current</th>-->
+<!--                      </tr>-->
+<!--                      </thead>-->
+<!--                      <tbody>-->
+<!--                      <tr *ngFor="let fd of fl.chngFarmdata">-->
+<!--                        <td>{{fd.change}}</td>-->
+<!--                        <td>{{fd.last}}</td>-->
+<!--                        <td>{{fd.current}}</td>-->
+<!--                      </tr>-->
+<!--                      </tbody>-->
+<!--                    </table>-->
+<!--                  </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--              </table>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
