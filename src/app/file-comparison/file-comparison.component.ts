@@ -16,7 +16,6 @@ export class FileComparisonComponent {
   projects: Project[] = [];
   private proId: any;
   auditPlans: AuditModel[] = [];
-  farmerlist_deleted: any = [];
   auditObject: AuditModel | undefined;
   isCertified: boolean = true;
   projectIdSelected: string = "";
@@ -30,8 +29,10 @@ export class FileComparisonComponent {
   oldFarmerList: any[] = [];
 
   submitForm() {
-    // this.newFarmersList = [];
-    // this.oldFarmersList = [];
+    this.farmlists = [];
+    this.newFarmerList = [];
+    this.deletedFarmerList = [];
+
     if (this.project != '' && this.audit != '') {
       console.log('audit id', this.audit)
       console.log('project id', this.proId)
@@ -39,11 +40,14 @@ export class FileComparisonComponent {
         .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
+
             this.farmlists = response
             this.newFarmerList = response.newFarmerList;
             this.deletedFarmerList = response.deletedFarmerList;
+            console.log(this.newFarmerList.length)
+            console.log(this.deletedFarmerList.length)
               response.existingFarmerList.forEach((r: any) => {
-                if (r.isChange == 1){
+                if (r.isNew == 0){
                   let obj = {
                     unitNoEUJAS: r.unitNoEUJAS,
                     farCodeEUJAS: r.farCodeEUJAS,
@@ -54,7 +58,6 @@ export class FileComparisonComponent {
                   this.oldFarmerList.push(obj);
               }
             });
-
           },
           (error) => {
             let err = "";
