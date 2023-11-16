@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Project} from "../model/project.model";
 import {NgForm} from "@angular/forms";
 import {WebSocketService} from "../service/websocket.service";
+import {AuditModel} from "../model/audit.model";
 
 @Component({
   selector: 'app-file-uploader',
@@ -16,11 +17,11 @@ export class FileUploaderComponent implements OnInit {
   errorList: string[] = [];
 
   project: string = '';
-  audit: string = '';
+  audit: any = '';
   projects: Project[] = [];
   private proId: any;
-  auditPlans: any = [];
-
+  auditPlans: AuditModel[] = [];
+  isCerfied = false;
   progress: number = 0;
   // private webSocket: WebSocket;
   stock: any = {};
@@ -129,6 +130,7 @@ export class FileUploaderComponent implements OnInit {
               const response = event.body;
               console.log('File upload complete:', response);
             }
+            // alert("Done")
           }, (error) => {
             let err = "";
             console.log(error.error)
@@ -140,6 +142,7 @@ export class FileUploaderComponent implements OnInit {
               // @ts-ignore
               this.form.resetForm()
             })
+          console.log("Error")
           }
         );
     }
@@ -175,15 +178,20 @@ export class FileUploaderComponent implements OnInit {
   }
 
   getAudits(proid: number) {
-    console.log("get audits plans for : ", this.proId)
-    this.http.get(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
+    console.log("get audits plans for : " + proid)
+    this.http.get<any>(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
-        // console.log(audits)
+        console.log(audits)
       });
   }
 
   onAuditOptionSelected() {
+    // const pro = this.auditPlans.find(a => a.planId === this.audit)
+    let auditObject = this.auditPlans.find(a => a.planId == this.audit);
+    // @ts-ignore
+    this.isCerfied = auditObject.certified;
     console.log("selected audit ", this.audit)
+    console.log("selected audit ", auditObject)
   }
 }

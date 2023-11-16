@@ -20,6 +20,7 @@ export class FileComparisonComponent {
   isCertified: boolean = true;
   projectIdSelected: string = "";
   projectName: string = "";
+  isCerfied : boolean = false;
 
   constructor(private http: HttpClient) {
   }
@@ -40,12 +41,13 @@ export class FileComparisonComponent {
         .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
-
+            console.log(response)
             this.farmlists = response
             this.newFarmerList = response.newFarmerList;
             this.deletedFarmerList = response.deletedFarmerList;
             console.log(this.newFarmerList.length)
             console.log(this.deletedFarmerList.length)
+
               response.existingFarmerList.forEach((r: any) => {
                 if (r.isNew == 0){
                   let obj = {
@@ -96,7 +98,7 @@ export class FileComparisonComponent {
 
   onAuditOptionSelected() {
     // const pro = this.auditPlans.find(a => a.planId === this.audit)
-    let auditObject = this.auditPlans.find(a => a.planId == this.audit);
+    let auditObject: any = this.auditPlans.find(a => a.planId == this.audit);
     // @ts-ignore
     this.isCertified = auditObject.certified;
     console.log("selected audit ", this.audit)
