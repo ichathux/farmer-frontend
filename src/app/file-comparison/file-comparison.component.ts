@@ -3,6 +3,7 @@ import {Project} from "../model/project.model";
 import {HttpClient} from "@angular/common/http";
 import {FarmerChanges} from "../model/farmer-changes.model";
 import {AuditModel} from "../model/audit.model";
+import {AppConfig} from "../service/app.config";
 
 @Component({
   selector: 'app-file-comparison',
@@ -38,7 +39,7 @@ export class FileComparisonComponent {
       console.log('audit id', this.audit)
       console.log('project id', this.proId)
       this.http
-        .get<any>(`http://localhost:8080/api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
+        .get<any>(`${AppConfig.apiUrl}api/farmerlist/v1/getFarmList?proId=${this.proId}&auditId=${this.audit}`)
         .subscribe(
           (response) => {
             console.log(response)
@@ -70,7 +71,7 @@ export class FileComparisonComponent {
   }
 
   searchProjects() {
-    this.http.get<Project[]>(`http://localhost:8080/api/project/v1/search?name=${this.project}`)
+    this.http.get<Project[]>(`${AppConfig.apiUrl}api/project/v1/search?name=${this.project}`)
       .subscribe(projects => {
         this.projects = projects
       });
@@ -89,7 +90,7 @@ export class FileComparisonComponent {
 
   getAudits(proid: number) {
     console.log("get audits plans for : " + proid)
-    this.http.get<any>(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
+    this.http.get<any>(`${AppConfig.apiUrl}api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
         console.log(audits)
@@ -116,7 +117,7 @@ export class FileComparisonComponent {
       formData.append('auditID', this.audit);
 
       this.http
-        .post(`http://localhost:8080/api/plan/v1/certify`, formData)
+        .post(`${AppConfig.apiUrl}api/plan/v1/certify`, formData)
         .subscribe(
           (response) => {
             alert("done")

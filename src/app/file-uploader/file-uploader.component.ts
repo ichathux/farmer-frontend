@@ -4,6 +4,7 @@ import {Project} from "../model/project.model";
 import {NgForm} from "@angular/forms";
 import {WebSocketService} from "../service/websocket.service";
 import {AuditModel} from "../model/audit.model";
+import {AppConfig} from "../service/app.config";
 
 @Component({
   selector: 'app-file-uploader',
@@ -97,7 +98,7 @@ export class FileUploaderComponent implements OnInit {
       formData.append('proId', this.proId);
       this.errorList = [];
       this.http
-        .post('http://localhost:8080/api/file/v1/upload', formData, {
+        .post(`${AppConfig.apiUrl}api/file/v1/upload`, formData, {
           reportProgress: true, // enable progress tracking
           observe: 'events'
         })
@@ -120,14 +121,16 @@ export class FileUploaderComponent implements OnInit {
         //   }
         // );
         .subscribe((event: any) => {
+          console.log(event)
             if (event.type === 1) {
-              console.log(event)
+              // console.log(event)
               // This is an upload progress event
               const percentDone = Math.round(100 * event.loaded / event.total);
               this.progress = percentDone;
             } else if (event.type === 4 && event.body) {
               // This is the final response after the file has been uploaded
               const response = event.body;
+              alert("Done")
               console.log('File upload complete:', response);
             }
             // alert("Done")
@@ -150,7 +153,7 @@ export class FileUploaderComponent implements OnInit {
 
 
   searchProjects() {
-    this.http.get<Project[]>(`http://localhost:8080/api/project/v1/search?name=${this.project}`)
+    this.http.get<Project[]>(`${AppConfig.apiUrl}api/project/v1/search?name=${this.project}`)
       .subscribe(projects => {
         this.projects = projects
         // console.log(this.projects)
@@ -179,7 +182,7 @@ export class FileUploaderComponent implements OnInit {
 
   getAudits(proid: number) {
     console.log("get audits plans for : " + proid)
-    this.http.get<any>(`http://localhost:8080/api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
+    this.http.get<any>(`${AppConfig.apiUrl}api/audit/v1/getAuditPlansByProId?proId=${this.proId}`)
       .subscribe(audits => {
         this.auditPlans = audits
         console.log(audits)
